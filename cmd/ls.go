@@ -30,11 +30,11 @@ With --all it is the file view: every occurrence of every key in file order,
 disabled ones included and marked with a leading "# ", each with its line
 number and description. With --json it is an array of objects, since keys may repeat, and each
 object also carries the key's description (the comment block above it).`,
-	Example: `  dotenv ls
-  dotenv ls --json
-  dotenv ls --keys
-  dotenv ls --all
-  dotenv ls --all --json`,
+	Example: `  envn ls
+  envn ls --json
+  envn ls --keys
+  envn ls --all
+  envn ls --all --json`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		f, _, err := loadExisting()

@@ -1,4 +1,4 @@
-# dotenv
+# envn
 
 A small CLI for imperatively reading and editing a dotenv file, modeled on
 `mise config get/set/ls`. Edits preserve comments, blank lines, ordering,
@@ -13,75 +13,75 @@ Mostly vibed, use as your own risk. I couldn't find an easy cli to install that 
 With [mise](https://mise.jdx.dev):
 
 ```sh
-mise use -g github:benkenawell/dotenv@latest    # prebuilt release binary
-mise use -g go:github.com/benkenawell/dotenv    # build from source
+mise use -g github:benkenawell/envn@latest    # prebuilt release binary
+mise use -g go:github.com/benkenawell/envn    # build from source
 ```
 
 With Go:
 
 ```sh
-go install github.com/benkenawell/dotenv@latest
-go build -o dotenv .          # local build from a checkout
+go install github.com/benkenawell/envn@latest
+go build -o envn .          # local build from a checkout
 ```
 
 Prebuilt binaries for Linux, macOS, and Windows are attached to each
-[GitHub Release](https://github.com/benkenawell/dotenv/releases).
+[GitHub Release](https://github.com/benkenawell/envn/releases).
 
 ## Usage
 
 The target file defaults to `.env` in the current directory. Override it with
-`--file`/`-f` on any command, or the `DOTENV_FILE` environment variable.
+`--file`/`-f` on any command, or the `ENVN_FILE` environment variable.
 
 ```sh
-dotenv get DATABASE_URL            # print one value (unquoted, escapes resolved)
-dotenv get DB_HOST --all           # -a, every active value of a repeated key, in file order
-dotenv get DB_HOST --all --json    # every occurrence incl. disabled, with line and description
-dotenv get                         # print the whole file
+envn get DATABASE_URL            # print one value (unquoted, escapes resolved)
+envn get DB_HOST --all           # -a, every active value of a repeated key, in file order
+envn get DB_HOST --all --json    # every occurrence incl. disabled, with line and description
+envn get                         # print the whole file
 
-dotenv set PORT 8080               # rewrite in place, or append if new
-dotenv set DATABASE_URL=postgres://localhost/app
-dotenv set SECRET 'has spaces'     # quoted automatically when needed
-dotenv set -e 'Postgres DSN' DATABASE_URL postgres://localhost/app
+envn set PORT 8080               # rewrite in place, or append if new
+envn set DATABASE_URL=postgres://localhost/app
+envn set SECRET 'has spaces'     # quoted automatically when needed
+envn set -e 'Postgres DSN' DATABASE_URL postgres://localhost/app
                                    # --explain writes a comment block above the key
-dotenv set --append DB_HOST staging.internal
+envn set --append DB_HOST staging.internal
                                    # add another occurrence after the last one; it becomes effective
-dotenv set --append --disabled DB_HOST prod.internal -e 'Production'
+envn set --append --disabled DB_HOST prod.internal -e 'Production'
                                    # add it commented out; effective value unchanged
-dotenv set --disabled FEATURE_X 1  # write the key but leave it commented out
+envn set --disabled FEATURE_X 1  # write the key but leave it commented out
 
-dotenv ls                          # effective view: one row per key, last active value wins
-dotenv ls --no-header
-dotenv ls --json                   # -J, flat {key: value} object
-dotenv ls --keys                   # -k, key names only
-dotenv ls --all                    # -a, file view: every occurrence with line and description, disabled included
-dotenv ls --all --json             # array of {line, key, value, description, enabled}
+envn ls                          # effective view: one row per key, last active value wins
+envn ls --no-header
+envn ls --json                   # -J, flat {key: value} object
+envn ls --keys                   # -k, key names only
+envn ls --all                    # -a, file view: every occurrence with line and description, disabled included
+envn ls --all --json             # array of {line, key, value, description, enabled}
 
-dotenv explain                     # line, key, and comment for every key
-dotenv explain --json
-dotenv explain DATABASE_URL        # print the comment block above the key
-dotenv explain get DATABASE_URL    # same thing, long form
-dotenv explain get DB_HOST --all   # -a, one row per occurrence, disabled included
-dotenv explain set DATABASE_URL 'Postgres connection string'
-dotenv explain remove DATABASE_URL # delete the comment block, keep the key
+envn explain                     # line, key, and comment for every key
+envn explain --json
+envn explain DATABASE_URL        # print the comment block above the key
+envn explain get DATABASE_URL    # same thing, long form
+envn explain get DB_HOST --all   # -a, one row per occurrence, disabled included
+envn explain set DATABASE_URL 'Postgres connection string'
+envn explain remove DATABASE_URL # delete the comment block, keep the key
 
-dotenv disable DEBUG               # comment the line out: "# DEBUG=..."
-dotenv enable DEBUG                # uncomment it again
-dotenv toggle DEBUG                # flip between the two
+envn disable DEBUG               # comment the line out: "# DEBUG=..."
+envn enable DEBUG                # uncomment it again
+envn toggle DEBUG                # flip between the two
 
-dotenv use DB_HOST staging.internal   # make that occurrence the only active one
-dotenv use DB_HOST --line 6           # select by line number from `ls --all`
-dotenv use DB_HOST                    # with several occurrences: list them, change nothing
+envn use DB_HOST staging.internal   # make that occurrence the only active one
+envn use DB_HOST --line 6           # select by line number from `ls --all`
+envn use DB_HOST                    # with several occurrences: list them, change nothing
 
-dotenv remove DEBUG                # aliases: rm, unset, delete
-dotenv remove DB_HOST staging.internal   # one occurrence by value
-dotenv remove DB_HOST --line 6           # one occurrence by line
-dotenv remove DB_HOST --all              # every occurrence
+envn remove DEBUG                # aliases: rm, unset, delete
+envn remove DB_HOST staging.internal   # one occurrence by value
+envn remove DB_HOST --line 6           # one occurrence by line
+envn remove DB_HOST --all              # every occurrence
 
-dotenv format                      # print the file with repeated keys grouped (alias: fmt)
-dotenv format -i                   # --in-place: rewrite the file instead
-dotenv format --check              # exit 1 if the file would change
+envn format                      # print the file with repeated keys grouped (alias: fmt)
+envn format -i                   # --in-place: rewrite the file instead
+envn format --check              # exit 1 if the file would change
 
-dotenv -f .env.production get API_KEY
+envn -f .env.production get API_KEY
 ```
 
 A comment block is one or more consecutive `#` lines directly above an entry;
@@ -104,7 +104,7 @@ PORT=8080
 # DEBUG=true
 ```
 
-`dotenv explain` prints each key's line, name, and comment. The disabled
+`envn explain` prints each key's line, name, and comment. The disabled
 `DEBUG` key is listed with a leading `# ` and keeps its description:
 
 ```
@@ -114,7 +114,7 @@ PORT=8080
    8  # DEBUG       Verbose request logging
 ```
 
-`dotenv ls` shows the effective environment, so the disabled key is absent:
+`envn ls` shows the effective environment, so the disabled key is absent:
 
 ```
 Key           Value
@@ -122,7 +122,7 @@ DATABASE_URL  postgres://localhost/app
 PORT          8080
 ```
 
-`dotenv ls --all` shows the file as written, with every occurrence, its line,
+`envn ls --all` shows the file as written, with every occurrence, its line,
 its value, and its description:
 
 ```
@@ -136,8 +136,8 @@ To add an alternative database, append a second occurrence. It lands directly
 under the first and, being last, becomes the effective value:
 
 ```sh
-dotenv set --append DATABASE_URL postgres://staging.internal/app -e 'Staging database'
-dotenv get DATABASE_URL
+envn set --append DATABASE_URL postgres://staging.internal/app -e 'Staging database'
+envn get DATABASE_URL
 # postgres://staging.internal/app
 ```
 
@@ -148,17 +148,17 @@ DATABASE_URL=postgres://localhost/app
 DATABASE_URL=postgres://staging.internal/app
 ```
 
-`dotenv use` switches between them. With no selector it refuses and lists the
+`envn use` switches between them. With no selector it refuses and lists the
 choices; with a value it enables that occurrence and disables the rest:
 
 ```sh
-dotenv use DATABASE_URL
-# dotenv: .env: "DATABASE_URL" has 2 occurrences; pass a VALUE or --line
+envn use DATABASE_URL
+# envn: .env: "DATABASE_URL" has 2 occurrences; pass a VALUE or --line
 # Line  Key           Value                            Description
 #    2  DATABASE_URL  postgres://localhost/app         Postgres connection string
 #    4  DATABASE_URL  postgres://staging.internal/app  Staging database
 
-dotenv use DATABASE_URL postgres://localhost/app
+envn use DATABASE_URL postgres://localhost/app
 ```
 
 ```sh

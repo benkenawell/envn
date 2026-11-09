@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/benkenawell/dotenv/internal/dotenv"
+	"github.com/benkenawell/envn/internal/dotenv"
 
 	"github.com/spf13/cobra"
 )
@@ -21,7 +21,7 @@ only when required.
 
 Use --explain to write a comment block directly above the key, replacing any
 comment already there. Newlines in the text produce multiple comment lines.
-Read it back with "dotenv explain KEY"; edit it later with "dotenv explain set".
+Read it back with "envn explain KEY"; edit it later with "envn explain set".
 
 Use --append to add another occurrence of KEY instead of rewriting the existing
 one. It is placed directly after the key's last occurrence and is active, so it
@@ -31,12 +31,12 @@ With --append, --explain describes the new occurrence only.
 
 --disabled also works without --append: the key is written (or rewritten) and
 left commented out.`,
-	Example: `  dotenv set PORT 8080
-  dotenv set DATABASE_URL=postgres://localhost/app
-  dotenv set -f .env.local SECRET 'has spaces and #hash'
-  dotenv set --explain 'Postgres connection string' DATABASE_URL postgres://localhost/app
-  dotenv set --append DB_HOST staging.internal -e 'Staging database'
-  dotenv set --append --disabled DB_HOST prod.internal -e 'Production, enable with care'`,
+	Example: `  envn set PORT 8080
+  envn set DATABASE_URL=postgres://localhost/app
+  envn set -f .env.local SECRET 'has spaces and #hash'
+  envn set --explain 'Postgres connection string' DATABASE_URL postgres://localhost/app
+  envn set --append DB_HOST staging.internal -e 'Staging database'
+  envn set --append --disabled DB_HOST prod.internal -e 'Production, enable with care'`,
 	Args: cobra.RangeArgs(1, 2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		key, value := args[0], ""

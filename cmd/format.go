@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/benkenawell/dotenv/internal/dotenv"
+	"github.com/benkenawell/envn/internal/dotenv"
 
 	"github.com/spf13/cobra"
 )
@@ -26,9 +26,9 @@ Everything else is left as written.
 By default the result is printed to stdout and the file is left untouched.
 With --in-place the file is rewritten instead. With --check nothing is written
 or printed; the exit code is 1 if the file would change.`,
-	Example: `  dotenv format > .env.formatted
-  dotenv format -i
-  dotenv format --check`,
+	Example: `  envn format > .env.formatted
+  envn format -i
+  envn format --check`,
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		f, path, err := loadExisting()
@@ -39,7 +39,7 @@ or printed; the exit code is 1 if the file would change.`,
 		switch {
 		case formatCheck:
 			if changed {
-				fmt.Fprintf(os.Stderr, "dotenv: %s would be reformatted\n", path)
+				fmt.Fprintf(os.Stderr, "envn: %s would be reformatted\n", path)
 				os.Exit(1)
 			}
 			return nil

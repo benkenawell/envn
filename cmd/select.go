@@ -5,7 +5,7 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/benkenawell/dotenv/internal/dotenv"
+	"github.com/benkenawell/envn/internal/dotenv"
 )
 
 // occurrenceTable renders occurrences of key in the same layout as "ls --all",

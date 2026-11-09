@@ -23,12 +23,12 @@ produces a release marked pre-release, which `latest` installs skip.
 
 - Static binaries for Linux, macOS, and Windows on amd64 and arm64.
 - One archive per platform (`tar.gz`, `zip` on Windows) containing the binary,
-  `LICENSE`, and `README.md`, named `dotenv_<version>_<os>_<arch>`.
+  `LICENSE`, and `README.md`, named `envn_<version>_<os>_<arch>`.
 - `checksums.txt` covering every archive.
 - A changelog generated from commit messages, excluding `docs:`, `test:`, and
   `ci:` prefixed commits.
 
-The version is injected at build time, so `dotenv --version` reports the tag.
+The version is injected at build time, so `envn --version` reports the tag.
 
 ## Try it locally
 

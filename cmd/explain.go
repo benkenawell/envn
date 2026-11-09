@@ -7,7 +7,7 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/benkenawell/dotenv/internal/dotenv"
+	"github.com/benkenawell/envn/internal/dotenv"
 
 	"github.com/spf13/cobra"
 )
@@ -33,11 +33,11 @@ with a leading "# ". Descriptions can be read and written on disabled keys.
 
 A key literally named "get", "set", or "remove" is shadowed by the shorthand;
 reach it with "explain get <KEY>".`,
-	Example: `  dotenv explain
-  dotenv explain DATABASE_URL
-  dotenv explain --json
-  dotenv explain set DATABASE_URL 'Postgres connection string'
-  dotenv explain remove DATABASE_URL`,
+	Example: `  envn explain
+  envn explain DATABASE_URL
+  envn explain --json
+  envn explain set DATABASE_URL 'Postgres connection string'
+  envn explain remove DATABASE_URL`,
 	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 1 {
@@ -75,9 +75,9 @@ var explainGetCmd = &cobra.Command{
 	Long: `Print the description of KEY: the comment block above its last occurrence.
 
 With --all, list every occurrence of KEY, disabled ones included, with its line
-number and description in the same format as "dotenv explain".`,
-	Example: `  dotenv explain get DATABASE_URL
-  dotenv explain get DB_HOST --all`,
+number and description in the same format as "envn explain".`,
+	Example: `  envn explain get DATABASE_URL
+  envn explain get DB_HOST --all`,
 	Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if explainAll {
@@ -123,9 +123,9 @@ var explainSetCmd = &cobra.Command{
 	Long: `Write TEXT as the comment block directly above KEY, replacing any block
 already there. Newlines in TEXT produce multiple comment lines. The key must
 exist, active or disabled; to create a key and its description together use
-"dotenv set --explain".`,
-	Example: `  dotenv explain set DATABASE_URL 'Postgres connection string'
-  dotenv explain set PORT $'Port the API listens on\nDefaults to 8080'`,
+"envn set --explain".`,
+	Example: `  envn explain set DATABASE_URL 'Postgres connection string'
+  envn explain set PORT $'Port the API listens on\nDefaults to 8080'`,
 	Args: cobra.ExactArgs(2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		key, text := args[0], args[1]
@@ -149,7 +149,7 @@ var explainRemoveCmd = &cobra.Command{
 	Short:   "Delete the description of keys",
 	Long: `Delete the comment block directly above each KEY. The key itself is kept.
 A key that has no description is left unchanged.`,
-	Example: `  dotenv explain remove DATABASE_URL`,
+	Example: `  envn explain remove DATABASE_URL`,
 	Args:    cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		f, path, err := loadExisting()

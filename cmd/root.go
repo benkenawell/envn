@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/benkenawell/dotenv/internal/dotenv"
+	"github.com/benkenawell/envn/internal/dotenv"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -17,12 +17,12 @@ const fileKey = "file"
 var version = "dev"
 
 var rootCmd = &cobra.Command{
-	Use:   "dotenv",
+	Use:   "envn",
 	Short: "Imperatively read and edit a dotenv file",
 	Long: `Read and edit a dotenv file from the command line.
 
 Edits preserve comments, blank lines, and ordering. The target file defaults
-to .env in the current directory; override it with --file or DOTENV_FILE.`,
+to .env in the current directory; override it with --file or ENVN_FILE.`,
 	Version:       version,
 	SilenceUsage:  true,
 	SilenceErrors: true,
@@ -31,7 +31,7 @@ to .env in the current directory; override it with --file or DOTENV_FILE.`,
 // Execute runs the CLI and exits non-zero on error.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, "dotenv:", err)
+		fmt.Fprintln(os.Stderr, "envn:", err)
 		os.Exit(1)
 	}
 }
@@ -39,7 +39,7 @@ func Execute() {
 func init() {
 	rootCmd.PersistentFlags().StringP(fileKey, "f", ".env", "dotenv file to operate on")
 	_ = viper.BindPFlag(fileKey, rootCmd.PersistentFlags().Lookup(fileKey))
-	viper.SetEnvPrefix("DOTENV")
+	viper.SetEnvPrefix("ENVN")
 	viper.AutomaticEnv()
 }
 

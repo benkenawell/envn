@@ -3,7 +3,7 @@ package cmd
 import (
 	"errors"
 
-	"github.com/benkenawell/dotenv/internal/dotenv"
+	"github.com/benkenawell/envn/internal/dotenv"
 
 	"github.com/spf13/cobra"
 )
@@ -12,19 +12,19 @@ var selLine int
 
 const selectorHelp = `
 An occurrence is selected by its VALUE, or by --line with the line number shown
-by "dotenv ls --all".`
+by "envn ls --all".`
 
 var disableCmd = &cobra.Command{
 	Use:   "disable <KEY> [VALUE]",
 	Short: "Comment out a key without deleting it",
 	Long: `Comment out KEY by prefixing its line with "# ". The value and any comment
-block above it are kept, so "dotenv enable" restores it exactly.
+block above it are kept, so "envn enable" restores it exactly.
 
 Without a selector every active occurrence of KEY is disabled, turning the key
 off entirely. With a selector only that occurrence is disabled.` + selectorHelp,
-	Example: `  dotenv disable DEBUG
-  dotenv disable DB_HOST staging.internal
-  dotenv disable DB_HOST --line 6`,
+	Example: `  envn disable DEBUG
+  envn disable DB_HOST staging.internal
+  envn disable DB_HOST --line 6`,
 	Args: cobra.RangeArgs(1, 2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		f, path, err := loadExisting()
@@ -50,24 +50,24 @@ off entirely. With a selector only that occurrence is disabled.` + selectorHelp,
 var enableCmd = &cobra.Command{
 	Use:   "enable <KEY> [VALUE]",
 	Short: "Uncomment a disabled key",
-	Long: `Uncomment KEY, whether it was disabled by "dotenv disable" or by hand as
+	Long: `Uncomment KEY, whether it was disabled by "envn disable" or by hand as
 "# KEY=value".
 
 Without a selector, KEY must have exactly one disabled occurrence; with several
 the command refuses and lists them, since enabling all of them would leave the
-last one silently shadowing the rest. Use "dotenv use" to pick one and disable
+last one silently shadowing the rest. Use "envn use" to pick one and disable
 the others, or give a selector to enable one occurrence and leave the rest as
 they are.` + selectorHelp,
-	Example: `  dotenv enable DEBUG
-  dotenv enable DB_HOST staging.internal
-  dotenv enable DB_HOST --line 6`,
+	Example: `  envn enable DEBUG
+  envn enable DB_HOST staging.internal
+  envn enable DB_HOST --line 6`,
 	Args: cobra.RangeArgs(1, 2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		f, path, err := loadExisting()
 		if err != nil {
 			return err
 		}
-		o, err := selectOccurrence(f, path, args[0], valueArg(args), selLine, isDisabled, ", or `dotenv use`")
+		o, err := selectOccurrence(f, path, args[0], valueArg(args), selLine, isDisabled, ", or `envn use`")
 		if errors.Is(err, errNoCandidates) {
 			return nil // key exists and nothing is disabled: already enabled
 		}
@@ -85,11 +85,11 @@ var toggleCmd = &cobra.Command{
 	Long: `Flip KEY between active and disabled.
 
 Without a selector: if any occurrence is active, all are disabled, as
-"dotenv disable" would; otherwise the single disabled occurrence is enabled, as
-"dotenv enable" would, and several disabled occurrences are refused. With a
+"envn disable" would; otherwise the single disabled occurrence is enabled, as
+"envn enable" would, and several disabled occurrences are refused. With a
 selector only that occurrence is flipped.` + selectorHelp,
-	Example: `  dotenv toggle DEBUG
-  dotenv toggle DB_HOST --line 6`,
+	Example: `  envn toggle DEBUG
+  envn toggle DB_HOST --line 6`,
 	Args: cobra.RangeArgs(1, 2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		f, path, err := loadExisting()
@@ -113,7 +113,7 @@ selector only that occurrence is flipped.` + selectorHelp,
 			f.Disable(key)
 			return dotenv.Save(path, f)
 		}
-		o, err := selectOccurrence(f, path, key, nil, 0, isDisabled, ", or `dotenv use`")
+		o, err := selectOccurrence(f, path, key, nil, 0, isDisabled, ", or `envn use`")
 		if err != nil {
 			return err
 		}
@@ -127,13 +127,13 @@ var useCmd = &cobra.Command{
 	Short: "Make one occurrence of a key the effective one",
 	Long: `Enable the selected occurrence of KEY and disable every other occurrence, so
 exactly one is active afterwards. This is how to switch between alternative
-values added with "dotenv set --append".
+values added with "envn set --append".
 
 Without a selector, KEY must have a single occurrence; otherwise the
 occurrences are listed and nothing is changed.` + selectorHelp,
-	Example: `  dotenv use DB_HOST staging.internal
-  dotenv use DB_HOST --line 6
-  dotenv use DB_HOST            # lists the alternatives when there are several`,
+	Example: `  envn use DB_HOST staging.internal
+  envn use DB_HOST --line 6
+  envn use DB_HOST            # lists the alternatives when there are several`,
 	Args: cobra.RangeArgs(1, 2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		f, path, err := loadExisting()

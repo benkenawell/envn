@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/benkenawell/dotenv/internal/dotenv"
+	"github.com/benkenawell/envn/internal/dotenv"
 
 	"github.com/spf13/cobra"
 )
@@ -15,17 +15,17 @@ var removeCmd = &cobra.Command{
 	Aliases: []string{"rm", "unset", "delete"},
 	Short:   "Remove a key from the dotenv file",
 	Long: `Remove KEY from the dotenv file. The comment block directly above it (see
-"dotenv explain") is removed with it, so no orphaned description is left
+"envn explain") is removed with it, so no orphaned description is left
 attached to the next entry.
 
 Without a selector, KEY must have a single occurrence, active or disabled; with
 several the command refuses, lists them, and changes nothing. Select one with
 VALUE or --line, or pass --all to remove every occurrence. Removing the active
-occurrence leaves the key with no active value; use "dotenv use" to pick one.` + selectorHelp,
-	Example: `  dotenv remove DEBUG
-  dotenv remove DB_HOST staging.internal
-  dotenv remove DB_HOST --line 6
-  dotenv remove DB_HOST --all`,
+occurrence leaves the key with no active value; use "envn use" to pick one.` + selectorHelp,
+	Example: `  envn remove DEBUG
+  envn remove DB_HOST staging.internal
+  envn remove DB_HOST --line 6
+  envn remove DB_HOST --all`,
 	Args: cobra.RangeArgs(1, 2),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		f, path, err := loadExisting()
